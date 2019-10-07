@@ -121,7 +121,7 @@ public class LightBeam : MonoBehaviour {
                         position = hitPoint.position; 
                         break;
                     case ReflectorNode.NodeType.Goal:
-                        Debug.Log(hit.point);
+                        //Debug.Log(hit.point);
                         position = hit.point;
                         break;
                    default:
@@ -167,7 +167,7 @@ public class LightBeam : MonoBehaviour {
         }
 
         reflectionPoints.Clear();
-        Debug.Log("Ending");
+        //Debug.Log("Ending");
         yield return new WaitForSeconds(2.5f);
         transform.position = playerPosition;
         fired = false;
