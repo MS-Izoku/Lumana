@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: a8504a0c5230142b99b2b7d9020d272f
+guid: 8475759dddf1542bc8b1270f91cdf906
 ModelImporter:
   serializedVersion: 26
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: left strafe walk
+    second: Falling Idle
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -35,19 +35,19 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: left strafe walk
+      name: Falling Idle
       takeName: mixamo.com
       internalID: 0
       firstFrame: 0
-      lastFrame: 28
+      lastFrame: 41
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
+      loopTime: 1
+      loopBlend: 1
       loopBlendOrientation: 0
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0

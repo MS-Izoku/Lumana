@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: a8504a0c5230142b99b2b7d9020d272f
+guid: 23ff915c3991f439f9712f8937238a8c
 ModelImporter:
   serializedVersion: 26
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: left strafe walk
+    second: Right Strafe
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -35,18 +35,18 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: left strafe walk
+      name: Right Strafe
       takeName: mixamo.com
       internalID: 0
       firstFrame: 0
-      lastFrame: 28
+      lastFrame: 40
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0

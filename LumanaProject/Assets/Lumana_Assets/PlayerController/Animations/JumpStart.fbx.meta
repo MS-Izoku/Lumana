@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: a8504a0c5230142b99b2b7d9020d272f
+guid: 9ea81eb42f5d04823b73604698c3ef5f
 ModelImporter:
   serializedVersion: 26
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: left strafe walk
+    second: Run Jump
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -35,11 +35,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: left strafe walk
+      name: Run Jump
       takeName: mixamo.com
       internalID: 0
       firstFrame: 0
-      lastFrame: 28
+      lastFrame: 60
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

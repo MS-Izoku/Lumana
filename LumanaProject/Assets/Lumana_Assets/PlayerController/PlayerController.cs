@@ -7,20 +7,23 @@ public class PlayerController : MonoBehaviour
 {
     private Animator characterAnimator;
     private CapsuleCollider col;
-   // public bool isGrounded = false;
     public float speed;
 
     public float jumpForce = 5f;
     public float animatorRunThreshold = 0.05f;
     public float maxSpeed = 10f;
     public float maxBackPedalSpeed = 5f;
+    [SerializeField] private float groundCheckLength = 0.1f;
 
-    public float maxJumpDrag = 5f;
+    public bool isRunning{
+        get{ return Input.GetAxis("Vertical") > 0; }
+        set { characterAnimator.SetBool("Running" , value); }
+    }
 
     private Rigidbody rb;
     private float animatorSpeed{
-        get{ return characterAnimator.GetFloat("Speed");}
-        set{ characterAnimator.SetFloat("Speed" , value);}
+        get{ return characterAnimator.GetFloat("Vertical");}
+        set{ characterAnimator.SetFloat("Vertical" , value);}
     }
 
 
@@ -29,15 +32,15 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         col = GetComponent<CapsuleCollider>();
     }
+
     private void PCPlayerMovement(){
         float moveHor = Input.GetAxis("Horizontal");
         float moveVert = Input.GetAxis("Vertical");
-
         Vector3 playerMovement = new Vector3(moveHor , 0 , moveVert).normalized * speed * Time.deltaTime;
+        
+        characterAnimator.SetFloat("Horizontal" , moveHor);
         transform.Translate(playerMovement , Space.Self);
         animatorSpeed = moveVert;
-        // if(animatorSpeed > animatorRunThreshold && animatorSpeed < -animatorRunThreshold) isRunning = false;
-        // else isRunning = true;
     }
 
     //gravity adjusted to -26 at the time of making this
@@ -53,7 +56,9 @@ public class PlayerController : MonoBehaviour
     }
 
     private bool isGrounded(){
-        return Physics.Raycast(transform.position + Vector3.up * 0.1f , Vector3.down * 0.1f , 1f);
+        bool res = Physics.Raycast(transform.position + Vector3.up * 0.1f , Vector3.down * groundCheckLength , 1f);
+        characterAnimator.SetBool("isGrounded" , res );
+        return res;
     }
 
 
