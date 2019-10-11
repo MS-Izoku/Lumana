@@ -18,8 +18,9 @@ public class LightBeam : MonoBehaviour {
     private float adjustedSpeed = 10f;
 
     public float beamPauseTime = 1f;
+
     public int reflectionCount = 5;
-    private int reflectionIndex = 0;
+    private int originalReflectionCount = 0;
     private int maxReflectionCount;
     public float maxBeamLength = 20f;
     private bool fired = false;
@@ -111,12 +112,80 @@ public class LightBeam : MonoBehaviour {
 
     // the initial position needs to be set in the update method
     // so that the beam knows the starting position
+    // public virtual void LaunchBeam(Vector3 position , Vector3 direction , int reflectionsRemaining){
+    //     if(reflectionsRemaining == 0){
+    //         if(!fired)
+    //             StartCoroutine(RenderBeam());
+    //         return;
+    //     };
+
+    //     Vector3 startPos = position;
+    //     Ray ray = new Ray(position , direction);
+    //     RaycastHit hit;
+    //     if(Physics.Raycast(ray , out hit , maxBeamLength)){
+    //        if(hit.rigidbody != null && hit.transform.tag == "Reflectable"){
+    //             switch(hit.transform.GetComponent<ReflectorNode>().nodeType){
+    //                case ReflectorNode.NodeType.Mirror:
+    //                     direction = Vector3.Reflect(direction , hit.normal);
+    //                     position = hit.point;
+    //                     break;
+    //                 case ReflectorNode.NodeType.Torch:
+    //                     direction = Vector3.up;
+    //                     position = hit.transform.Find("ReflectorPoint").position;
+    //                     break;
+    //                 case ReflectorNode.NodeType.Node:
+    //                     Transform hitPoint = hit.transform.Find("ReflectorPoint");
+    //                     direction = hitPoint.forward;
+    //                     position = hitPoint.position; 
+    //                     break;
+    //                 case ReflectorNode.NodeType.Goal:
+    //                     position = hit.point;
+    //                     reflectionsRemaining = 0;
+    //                     // Debug.Log("Goal Hit");
+    //                     break;
+    //                default:
+    //                 break;
+    //            }
+    //         }
+    //     }
+    //     else if(hit.rigidbody != null && transform.tag == "Glass"){ // Glass Exception , used for puzzles
+    //         reflectionsRemaining += 1;
+    //     }
+    //     else {
+    //         position += direction * maxBeamLength;
+    //         reflectionPoints.Add(position);
+    //         StartCoroutine(RenderBeam());
+    //     }
+
+        
+
+    //     if(hit.rigidbody != null && hit.transform.tag == "Reflectable")
+    //     {
+    //         reflectionPoints.Add(position);
+    //         if(reflectionIndex != reflectionPoints.Count - 1){
+    //             reflectionIndex++;
+    //             LaunchBeam(position , direction , reflectionsRemaining - 1);
+    //         }
+    //     }
+    //     else{
+    //         Debug.Log("Invalid Hit Tag");
+    //         reflectionPoints.Add(position);
+    //         reflectionsRemaining = 0;
+    //         LaunchBeam(position , direction , reflectionsRemaining);
+    //         //LaunchBeam(position , direction , reflectionsRemaining -1);
+    //         // reflectionPoints.Add(position);
+    //         // LaunchBeam(position , direction , 0);
+    //     }
+    // }
+
+    //Version 2 to match up better with the GUI
     public virtual void LaunchBeam(Vector3 position , Vector3 direction , int reflectionsRemaining){
-        if(reflectionsRemaining == 0){
-            if(!fired)
-                StartCoroutine(RenderBeam());
+        if(reflectionsRemaining <= 0){
+            Debug.Log("Starting to Fire Beam");
+            StartCoroutine(RenderBeam());
             return;
-        };
+        }
+        else Debug.Log(reflectionsRemaining);
 
         Vector3 startPos = position;
         Ray ray = new Ray(position , direction);
@@ -135,36 +204,51 @@ public class LightBeam : MonoBehaviour {
                     case ReflectorNode.NodeType.Node:
                         Transform hitPoint = hit.transform.Find("ReflectorPoint");
                         direction = hitPoint.forward;
-                        position = hitPoint.position; 
+                        position = hitPoint.position;
                         break;
                     case ReflectorNode.NodeType.Goal:
                         position = hit.point;
                         reflectionsRemaining = 0;
-                        Debug.Log("Goal Hit");
                         break;
                    default:
                     break;
                }
             }
+            else if(hit.rigidbody != null && transform.tag == "Glass"){ // Glass Exception , used for puzzles
+                reflectionsRemaining += 1;
+            }
+            else{   // Path Ending Stopper
+                position = hit.point;
+                reflectionsRemaining = 0;
+            }
         }
-        else if(hit.rigidbody != null && transform.tag == "Glass"){ // Glass Exception , used for puzzles
-            reflectionsRemaining += 1;
-        }
-        else {
-            position += direction * maxBeamLength;
-            reflectionPoints.Add(position);
-            StartCoroutine(RenderBeam());
+        else{   // No-Hit Path Stopper
+             position += direction * maxBeamLength;
         }
 
-        
-
-        if(hit.rigidbody != null && hit.transform.tag == "Reflectable")
+        if(hit.rigidbody != null && reflectionsRemaining >= 0)
         {
             reflectionPoints.Add(position);
-            if(reflectionIndex != reflectionPoints.Count - 1){
-                reflectionIndex++;
-                LaunchBeam(position , direction , reflectionsRemaining - 1);
+            if(hit.transform.tag == "Reflectable"){ // Reflectable Check
+                if(hit.transform.GetComponent<ReflectorNode>().nodeType != ReflectorNode.NodeType.Goal)
+                    LaunchBeam(position , direction , reflectionsRemaining - 1);
+                else{ // is it a Goal?
+                    reflectionsRemaining = 0;
+                    LaunchBeam(position , direction , 0);
+                }
             }
+            else{   // Untagged Object Exception
+                Debug.Log("Untagged Object hit, no reflection");
+                reflectionsRemaining = 0;
+                LaunchBeam(position , direction , reflectionsRemaining);
+            }
+        }
+        else{ // No Object Hit Exception
+            Debug.Log("No Hit Found at Point");
+            Debug.Log("Target: " + position);
+            reflectionPoints.Add(position);
+            reflectionsRemaining = 0;
+            LaunchBeam(position , direction , reflectionsRemaining);
         }
     }
 
@@ -173,16 +257,9 @@ public class LightBeam : MonoBehaviour {
         adjustedSpeed = Mathf.Clamp(adjustedSpeed + (adjustedSpeed * adjustedMultiplier) , 0 , maxSpeed);
     }
 
-    // private void OnCollisionEnter(Collision col){
-    //     if(col.gameObject.tag == "Glass")
-    //         Physics.IgnoreCollision(transform.GetComponent<Collider>() , col.transform.GetComponent<Collider>());
-    //     else if(col.gameObject.tag != "Reflectable")
-    //         Destroy(gameObject);
-        
-    // }
-
     public virtual IEnumerator RenderBeam(){
         // TODO: adjust the speed algorythm to make the shot look crispy
+        //Debug.Log("Beam is Moving!");
         fired = true;
         int currentIndex = 0;
         while(currentIndex != reflectionPoints.Count){
@@ -192,7 +269,7 @@ public class LightBeam : MonoBehaviour {
             {
                 currentIndex++;
                 adjustedSpeed = speed;
-                
+                //Debug.Log("Beam has Reached the target");
                 yield return new WaitForSeconds(beamPauseTime);
             }
             
@@ -200,9 +277,8 @@ public class LightBeam : MonoBehaviour {
         }
 
         reflectionPoints.Clear();
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(beamPauseTime);
         transform.position = playerPosition;
-        
         fired = false;
     }
 }
