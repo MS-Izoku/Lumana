@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
         Vector3 playerMovement = new Vector3(moveHor , 0 , moveVert).normalized * speed * Time.deltaTime;
         
         characterAnimator.SetFloat("Horizontal" , moveHor);
-        transform.Translate(playerMovement , Space.Self);
+        transform.Translate(playerMovement);
         animatorSpeed = moveVert;
     }
 
