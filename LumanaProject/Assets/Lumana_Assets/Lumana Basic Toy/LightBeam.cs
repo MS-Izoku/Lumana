@@ -212,7 +212,7 @@ public class LightBeam : MonoBehaviour {
     }
 
     private void OnCollisionEnter(Collision other){
-        Debug.Log("Collision!");
+        //Debug.Log("Collision!");
         if(other.transform.tag == "Reflectable"){
             ReflectorNode node = other.transform.GetComponent<ReflectorNode>();
             if(node.nodeType == ReflectorNode.NodeType.Goal)

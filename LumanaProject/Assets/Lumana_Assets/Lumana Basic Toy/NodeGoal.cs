@@ -12,7 +12,6 @@ public class NodeGoal : MonoBehaviour
     public float deactivationTime = 2f;
 
     public void Activate(){
-        Debug.Log("Activated Node Goal: " + gameObject.name);
         nodeGoalActive = true;
         if(!permanentActive)
             if(onTimer)
@@ -22,9 +21,7 @@ public class NodeGoal : MonoBehaviour
     }
 
     private IEnumerator WaitToDeactivate(){
-        Debug.Log("Deactivating in -" + deactivationTime + "- seconds");
         yield return new WaitForSeconds(deactivationTime);
         nodeGoalActive = false;
-        Debug.Log("Deactivated");
     }
 }

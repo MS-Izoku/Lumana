@@ -12,10 +12,32 @@ public class CameraController : MonoBehaviour
     private float mouseX;
     private float mouseY;
 
+    public Transform lockTarget;
+
+    private Vector3 initialLocalTargetPos;
+    private Quaternion initialTargetRot;
+    private Vector3 initialLocalCameraPos;
+    private Quaternion initialCameraRot;
+
+    public bool isLockedOn{
+        get{ return lockTarget != null; }
+    }
+
+
     void Start(){
+        SetUpCamera();
         if(invertY)
             cameraLocks *= -1;
+        StartCoroutine(ForceLook());
     }
+
+    private void SetUpCamera(){
+        initialLocalTargetPos = target.localPosition;
+        initialLocalCameraPos = transform.localPosition;
+        initialTargetRot = target.transform.rotation;
+        initialCameraRot = transform.rotation;
+    }
+
     private void ControlCam(){
         mouseX += Input.GetAxis("Mouse X") * rotSpeed;  // these will need to be refactored for Controllers
         mouseY += Input.GetAxis("Mouse Y") * -rotSpeed;  // these will need to be refactored for Controllers
@@ -28,6 +50,25 @@ public class CameraController : MonoBehaviour
     }
 
     void LateUpdate(){
-        ControlCam();
+        if(!isLockedOn)
+            ControlCam();
+    }
+
+    private IEnumerator ForceLook(){
+        while(lockTarget == null) yield return null;
+        if(lockTarget != null){
+            while(lockTarget != null){
+                Quaternion targetRot = Quaternion.LookRotation(lockTarget.position - transform.position);
+                target.transform.rotation = Quaternion.Slerp(target.transform.rotation , targetRot , Time.deltaTime * rotSpeed);
+                yield return null;
+            }
+        }
+       
+        // while(!isLockedOn){
+        //     if(isLockedOn) break;
+        //     Quaternion targetRot = Quaternion.LookRotation(initialLocalCameraPos - transform.position);
+        //     target.transform.rotation = Quaternion.Slerp(target.transform.rotation , targetRot , Time.deltaTime * rotSpeed);
+        // }
+        yield return null;
     }
 }

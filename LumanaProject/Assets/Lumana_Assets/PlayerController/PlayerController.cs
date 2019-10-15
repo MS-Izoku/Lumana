@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
     public float maxBackPedalSpeed = 5f;
     [SerializeField] private float groundCheckLength = 0.1f;
 
+    public CameraController cameraController;
+
     public bool isRunning{
         get{ return Input.GetAxis("Vertical") > 0; }
         set { characterAnimator.SetBool("Running" , value); }
@@ -34,6 +36,23 @@ public class PlayerController : MonoBehaviour
     }
 
     private void PCPlayerMovement(){
+        float moveHor = Input.GetAxis("Horizontal");
+        float moveVert = Input.GetAxis("Vertical");
+        Vector3 playerMovement = new Vector3(moveHor , 0 , moveVert).normalized * speed * Time.deltaTime;
+        
+        characterAnimator.SetFloat("Horizontal" , moveHor);
+        transform.Translate(playerMovement);
+        animatorSpeed = moveVert;
+    }
+
+    private void LockOnMovement(){
+        //transform.LookAt(cameraController.lockTarget);
+        Vector3 tempPos = cameraController.lockTarget.position;
+        tempPos.y = 0;
+        Quaternion targetRot = Quaternion.LookRotation(tempPos - transform.position);
+
+        transform.rotation = Quaternion.Slerp(transform.rotation , targetRot , Time.deltaTime * 5f);
+
         float moveHor = Input.GetAxis("Horizontal");
         float moveVert = Input.GetAxis("Vertical");
         Vector3 playerMovement = new Vector3(moveHor , 0 , moveVert).normalized * speed * Time.deltaTime;
@@ -63,7 +82,10 @@ public class PlayerController : MonoBehaviour
 
 
     void Update(){
-        PCPlayerMovement();
+        if(!cameraController.isLockedOn)
+            PCPlayerMovement();
+        else
+            LockOnMovement();
         Jump();
     }
 }
