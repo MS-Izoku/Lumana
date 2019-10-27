@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     public float maxBackPedalSpeed = 5f;
     [SerializeField] private float groundCheckLength = 0.1f;
 
-    public CameraController cameraController;
+    //public CameraController cameraController;
 
     public bool isRunning{
         get{ return Input.GetAxis("Vertical") > 0; }
@@ -47,19 +47,19 @@ public class PlayerController : MonoBehaviour
 
     private void LockOnMovement(){
         //transform.LookAt(cameraController.lockTarget);
-        Vector3 tempPos = cameraController.lockTarget.position;
-        tempPos.y = 0;
-        Quaternion targetRot = Quaternion.LookRotation(tempPos - transform.position);
+        // Vector3 tempPos = cameraController.lockTarget.position;
+        // tempPos.y = 0;
+        // Quaternion targetRot = Quaternion.LookRotation(tempPos - transform.position);
 
-        transform.rotation = Quaternion.Slerp(transform.rotation , targetRot , Time.deltaTime * 5f);
+        // transform.rotation = Quaternion.Slerp(transform.rotation , targetRot , Time.deltaTime * 5f);
 
-        float moveHor = Input.GetAxis("Horizontal");
-        float moveVert = Input.GetAxis("Vertical");
-        Vector3 playerMovement = new Vector3(moveHor , 0 , moveVert).normalized * speed * Time.deltaTime;
+        // float moveHor = Input.GetAxis("Horizontal");
+        // float moveVert = Input.GetAxis("Vertical");
+        // Vector3 playerMovement = new Vector3(moveHor , 0 , moveVert).normalized * speed * Time.deltaTime;
         
-        characterAnimator.SetFloat("Horizontal" , moveHor);
-        transform.Translate(playerMovement);
-        animatorSpeed = moveVert;
+        // characterAnimator.SetFloat("Horizontal" , moveHor);
+        // transform.Translate(playerMovement);
+        // animatorSpeed = moveVert;
     }
 
     //gravity adjusted to -26 at the time of making this
@@ -82,10 +82,11 @@ public class PlayerController : MonoBehaviour
 
 
     void Update(){
-        if(!cameraController.isLockedOn)
-            PCPlayerMovement();
-        else
-            LockOnMovement();
+        // if(!cameraController.isLockedOn)
+        //     PCPlayerMovement();
+        // else
+        //     LockOnMovement();
+        PCPlayerMovement();
         Jump();
     }
 }

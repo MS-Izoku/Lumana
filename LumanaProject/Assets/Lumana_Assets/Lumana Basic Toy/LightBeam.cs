@@ -114,7 +114,6 @@ public class LightBeam : MonoBehaviour {
     //Version 2 to match up better with the GUI
     public virtual void LaunchBeam(Vector3 position , Vector3 direction , int reflectionsRemaining){
         if(reflectionsRemaining <= 0){
-            Debug.Log("Starting to Fire Beam");
             StartCoroutine(RenderBeam());
             return;
         }
@@ -171,14 +170,11 @@ public class LightBeam : MonoBehaviour {
                 }
             }
             else{   // Untagged Object Exception
-                Debug.Log("Untagged Object hit, no reflection");
                 reflectionsRemaining = 0;
                 LaunchBeam(position , direction , reflectionsRemaining);
             }
         }
         else{ // No Object Hit Exception
-            Debug.Log("No Hit Found at Point");
-            Debug.Log("Target: " + position);
             reflectionPoints.Add(position);
             reflectionsRemaining = 0;
             LaunchBeam(position , direction , reflectionsRemaining);
@@ -212,7 +208,6 @@ public class LightBeam : MonoBehaviour {
     }
 
     private void OnCollisionEnter(Collision other){
-        //Debug.Log("Collision!");
         if(other.transform.tag == "Reflectable"){
             ReflectorNode node = other.transform.GetComponent<ReflectorNode>();
             if(node.nodeType == ReflectorNode.NodeType.Goal)
