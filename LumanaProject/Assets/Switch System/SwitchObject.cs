@@ -4,24 +4,25 @@ using UnityEngine;
 
 public class SwitchObject : MonoBehaviour
 {
-    protected bool _switchActive = false;
+    [SerializeField]protected bool _switchActive = false;
     public virtual bool switchActive{
         get{
             return _switchActive;
         }
-        private set{
+        set{
             this._switchActive = value;
         }
     }
 
-    public bool ToggleSwitch(){
+    public void ToggleSwitch(){
         _switchActive = !_switchActive;
-        return _switchActive;
     }
 
-    public bool SetSwitchState(bool activeState){
+    public void SetSwitchState(bool activeState){
         _switchActive = activeState;
-        return _switchActive;
     }
 
+    public void ForceState(bool boolState){
+        _switchActive = boolState;
+    }
 }
