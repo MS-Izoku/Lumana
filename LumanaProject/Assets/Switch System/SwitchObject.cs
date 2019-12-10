@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SwitchObject : MonoBehaviour
 {
-    [SerializeField]protected bool _switchActive = false;
+    [SerializeField]protected bool _switchActive = false; // this only works on startup in the editor
     public virtual bool switchActive{
         get{
             return _switchActive;
@@ -22,7 +22,7 @@ public class SwitchObject : MonoBehaviour
         _switchActive = activeState;
     }
 
-    public void ForceState(bool boolState){
+    public void ForceSwitchObjectState(bool boolState){
         _switchActive = boolState;
     }
 }
