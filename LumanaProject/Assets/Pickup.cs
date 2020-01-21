@@ -12,7 +12,7 @@ public class Pickup : MonoBehaviour
     public Item item;
 
     void Start(){
-        audioField = GetCompnent<AudioSource>();
+        audioField = GetComponent<AudioSource>();
     }
 
     void OnTriggerEnter(Collider other){
@@ -22,7 +22,7 @@ public class Pickup : MonoBehaviour
 
     public virtual void PickupItem(){
         Debug.Log("PickUp");
-        AudioSource.Play(0);
+        audioField.Play(0);
         Destroy(this.gameObject);
         // Add To inventory
     }
